@@ -10,3 +10,8 @@
 # System Files
 .DS_Store
 Thumbs.db
+
+# Other
+lovohhwebapi
+vet.report
+/scripts
