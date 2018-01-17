@@ -1,0 +1,83 @@
+version: 2
+
+# Settings common to each job.
+anchor_1: &defaults
+  working_directory: /go/src/github.com/lovohh/lovohhwebapi/
+  docker:
+    - image: circleci/golang:1.9.2
+
+# Attach workspace that contains the built binary
+anchor_2: &attach_workspace_defaults
+    at: ~/workspace
+
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: make
+      - run: mkdir ~/workspace && mv ./lovohhwebapi ~/workspace
+      - persist_to_workspace:
+          root: ~/workspace
+          paths:
+            - lovohhwebapi
+  test:
+    <<: *defaults
+    environtment:
+      TEST_RESULTS: /tmp/test-results
+    steps:
+      - checkout
+      - run: mkdir -p $TEST_RESULTS
+      - run: go get github.com/jstemmer/go-junit-report
+      - run: go get github.com/tools/godep
+      - run: |
+          trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
+          make test | tee ${TEST_RESULTS}/go-test.out
+      - store_artifacts:
+          path: $TEST_RESULTS
+          destination: raw-test-output
+      - store_test_results:
+          path: $TEST_RESULTS
+
+  deploy:
+    working_directory: ~/workspace
+    docker:
+      - image: circleci/golang:1.9.2
+    steps:
+      - checkout
+      - attach_workspace:
+          <<: *attach_workspace_defaults
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.05.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            sudo mv /tmp/docker/* /usr/bin
+      - run:
+          name: Push to DockerHub
+          command: |
+            docker build -f ./Dockerfile -t lovohh/lovohhwebapi:$CIRCLE_SHA1 .
+            docker login -u $DH_USER -p $DH_PASS
+            docker push lovohh/lovohhwebapi:$CIRCLE_SHA1
+
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - hold:
+          type: approval
+          requires:
+            - test
+      - deploy:
+          requires:
+            - hold
