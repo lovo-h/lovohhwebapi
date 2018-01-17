@@ -1,10 +1,10 @@
 package infrastructure
 
 import (
-	"testing"
-	"net/http/httptest"
 	"github.com/stretchr/testify/assert"
 	"net/http"
+	"net/http/httptest"
+	"testing"
 )
 
 func TestWebResponder_BadRequest(t *testing.T) {
