@@ -1,5 +1,3 @@
-SHELL := /bin/bash
-
 # The name of the executable (default is current directory name)
 TARGET := lovohhwebapi
 .DEFAULT_GOAL := $(TARGET)
@@ -23,7 +21,7 @@ all: prepare $(TARGET)
 prepare: clean test vet simplify
 
 $(TARGET): $(SRC)
-		GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o $(TARGET)
+		CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a $(LDFLAGS) -o $(TARGET)
 
 build: $(TARGET)
 		@true
