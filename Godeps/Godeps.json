@@ -9,6 +9,11 @@
 			"Rev": "ecdeabc65495df2dec95d7c4a4c3e021903035e5"
 		},
 		{
+			"ImportPath": "github.com/dchest/captcha",
+			"Comment": "weekly.2012-03-04-20-g6a29415",
+			"Rev": "6a29415a8364ec2971fdc62d9e415ed53fc20410"
+		},
+		{
 			"ImportPath": "github.com/gorilla/mux",
 			"Comment": "v1.4.0-13-gac112f7",
 			"Rev": "ac112f7d75a0714af1bd86ab17749b31f7809640"
