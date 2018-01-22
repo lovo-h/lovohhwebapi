@@ -49,3 +49,12 @@ func TestWebLoggerMiddleware_ServeHTTP(t *testing.T) {
 	assert.Len(t, logger.StoredMessage, 1)
 	assert.True(t, nextHttpHandler.invokedServeHttp)
 }
+
+func TestGetAndInitWebLoggerMiddleware(t *testing.T) {
+  logger, _ := logger_weblogger()
+  weblogger := GetAndInitWebLoggerMiddleware(logger)
+  weblogger.Logger.Log("")
+
+  assert.NotNil(t, weblogger)
+  assert.True(t, logger.IsCalled)
+}

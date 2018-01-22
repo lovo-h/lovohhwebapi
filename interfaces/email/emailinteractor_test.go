@@ -133,5 +133,5 @@ func TestEmailInteractor_SendEmail_SendError(t *testing.T) {
 	assert.NotNil(t, sendErr)
 	assert.Equal(t, "mocked error", sendErr.Error())
 	assert.Len(t, logger.StoredMessage, 2)
-	assert.Equal(t, "\t- Failed to send email", logger.StoredMessage[1])
+	assert.Equal(t, "\t- Failed to send email: mocked error", logger.StoredMessage[1])
 }
