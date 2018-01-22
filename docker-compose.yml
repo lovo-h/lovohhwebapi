@@ -9,3 +9,6 @@ services:
       container_name: LWAGolang
       ports:
         - "3000:3000"
+      environment:
+        - LWA_EMAIL_UN=$EMAIL_UN
+        - LWA_EMAIL_PW=$EMAIL_PASS

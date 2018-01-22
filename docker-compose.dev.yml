@@ -11,3 +11,6 @@ services:
         - "3000:3000"
       volumes:
         - .:/go/src/github.com/lovohh/lovohhwebapi/
+      environment:
+        - LWA_EMAIL_UN=$EMAIL_UN
+        - LWA_EMAIL_PW=$EMAIL_PASS
