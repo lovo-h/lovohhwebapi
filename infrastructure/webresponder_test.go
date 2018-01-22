@@ -7,6 +7,12 @@ import (
 	"testing"
 )
 
+func getActualStatusCode(fn func(http.ResponseWriter)) int {
+	nr := httptest.NewRecorder()
+	fn(nr)
+	return nr.Result().StatusCode
+}
+
 func TestWebResponder_BadRequest(t *testing.T) {
 	wr := WebResponder{}
 	actual := getActualStatusCode(wr.BadRequest)
@@ -59,10 +65,4 @@ func TestWebResponder_Unauthorized(t *testing.T) {
 	wr := WebResponder{}
 	actual := getActualStatusCode(wr.Unauthorized)
 	assert.Equal(t, http.StatusUnauthorized, actual)
-}
-
-func getActualStatusCode(fn func(http.ResponseWriter)) int {
-	nr := httptest.NewRecorder()
-	fn(nr)
-	return nr.Result().StatusCode
 }
