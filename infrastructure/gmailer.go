@@ -19,7 +19,7 @@ func (mailer *Gmailer) Send(from, to, subject, msg string) error {
 		"From: " + from + "\n\n" + msg
 
 	auth := smtp.PlainAuth("", mailer.un, mailer.pw, mailer.host)
-	sendErr := smtp.SendMail(mailer.host+":587", auth, from, []string{to}, []byte(formattedMsg))
+	sendErr := smtp.SendMail(mailer.host+":"+mailer.port, auth, from, []string{to}, []byte(formattedMsg))
 
 	return sendErr
 }

@@ -22,7 +22,7 @@ func (interactor *EmailInteractor) SendEmail(form usecases.EmailForm) error {
 	sendErr := interactor.Gmailer.Send(form.Email, "lovohh@gmail.com", form.Subject, form.Message)
 
 	if sendErr != nil {
-		interactor.Logger.Log("\t- Failed to send email")
+		interactor.Logger.Log("\t- Failed to send email: " + sendErr.Error())
 		return sendErr
 	}
 
