@@ -1,25 +1,43 @@
 package main
 
 import (
-	"fmt"
-	gmux "github.com/gorilla/mux"
+	"github.com/justinas/alice"
+	"github.com/lovohh/lovohhwebapi/infrastructure"
 	_ "github.com/lovohh/lovohhwebapi/infrastructure/deps"
+	"github.com/lovohh/lovohhwebapi/infrastructure/middleware"
+	"github.com/lovohh/lovohhwebapi/interfaces"
+	"github.com/lovohh/lovohhwebapi/interfaces/captcha"
+	"github.com/lovohh/lovohhwebapi/interfaces/email"
 	"net/http"
 )
 
 func main() {
-	router := gmux.NewRouter()
+	// Webservice
+	logger := new(interfaces.Logger)
+	gmailer := infrastructure.GetAndInitGMailer()
+	jsonResponder := new(infrastructure.JSONWebResponder)
+	emailInteractor := email.GetAndInitEmailInteractor(logger, gmailer)
+	captchaInteractor := captcha.InitCaptchaHandler(logger)
+	webserviceHandler := &interfaces.WebserviceHandler{
+		jsonResponder,
+		emailInteractor,
+		captchaInteractor,
+	}
 
-	router.HandleFunc("/test", func(rw http.ResponseWriter, req *http.Request) {
-		rw.Write([]byte("Hello world"))
-	})
+	// Middleware
+
+	weblogger := middleware.GetAndInitWebLoggerMiddleware(logger)
+
+	globalMiddleware := []alice.Constructor{weblogger.Handle}
+
+	router := infrastructure.GetRouterWithRoutes(webserviceHandler)
 
 	server := &http.Server{
 		Addr:    ":3000",
-		Handler: router,
+		Handler: alice.New(globalMiddleware...).Then(router),
 	}
 
 	if serverErr := server.ListenAndServe(); serverErr != nil {
-		fmt.Println("Server failed to boot: " + serverErr.Error())
+		logger.Log("Server failed to boot: " + serverErr.Error())
 	}
 }
