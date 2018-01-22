@@ -12,9 +12,9 @@
 Thumbs.db
 
 # Other
-lovohhwebapi
-vet.report
 /scripts
 /tmp
+lovohhwebapi
+vet.report
 go-test.out
 go-test.report.xml
