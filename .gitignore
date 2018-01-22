@@ -16,3 +16,5 @@ lovohhwebapi
 vet.report
 /scripts
 /tmp
+go-test.out
+go-test.report.xml
