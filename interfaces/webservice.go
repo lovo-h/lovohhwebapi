@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	CaptchaWidth  = 320
-	CaptchaHeight = 80
+	CaptchaWidth  = 310
+	CaptchaHeight = 46
 )
 
 type WebserviceHandler struct {
@@ -22,6 +22,7 @@ type WebserviceHandler struct {
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=- EMAIL
 
+//  /api/email [POST]
 func (webhandler *WebserviceHandler) SendEmail(rw http.ResponseWriter, req *http.Request) {
 	emailForm := usecases.EmailForm{}
 
@@ -50,12 +51,14 @@ func (webhandler *WebserviceHandler) SendEmail(rw http.ResponseWriter, req *http
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=- CAPTCHA
 
+//  /api/captcha [GET]
 func (webhandler *WebserviceHandler) NewCaptcha(rw http.ResponseWriter) {
 	id := webhandler.CaptchaInteractor.New()
 
 	webhandler.Responder.Success(rw, usecases.M{"id": id})
 }
 
+//  /api/captcha [PUT]
 func (webhandler *WebserviceHandler) ReloadCaptcha(rw http.ResponseWriter, req *http.Request) {
 	idMap := usecases.M{}
 	if decErr := json.NewDecoder(req.Body).Decode(&idMap); decErr != nil && decErr != io.EOF {
@@ -72,6 +75,7 @@ func (webhandler *WebserviceHandler) ReloadCaptcha(rw http.ResponseWriter, req *
 	webhandler.Responder.NoContent(rw)
 }
 
+//  /api/captcha/img/{id} [GET]
 func (webhandler *WebserviceHandler) GetCaptchaImage(rw http.ResponseWriter, req *http.Request, vars map[string]string) {
 	id := vars["id"]
 	buffer, imageErr := webhandler.CaptchaInteractor.GetImageBuffer(id, CaptchaWidth, CaptchaHeight)
