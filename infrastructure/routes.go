@@ -27,9 +27,10 @@ func GetRouterWithRoutes(webservice *interfaces.WebserviceHandler) *gmux.Router 
 		webservice.NewCaptcha(rw)
 	}).Methods("GET")
 
-	captchaRouter.HandleFunc("", func(rw http.ResponseWriter, req *http.Request) {
-		webservice.ReloadCaptcha(rw, req)
-	}).Methods("PUT")
+	// TODO: May not be needed. Remove all related functionality?
+	//captchaRouter.HandleFunc("", func(rw http.ResponseWriter, req *http.Request) {
+	//	webservice.ReloadCaptcha(rw, req)
+	//}).Methods("PUT")
 
 	captchaRouter.Handle("/img/{id:[a-zA-Z0-9]+}",
 		VarsHandler(func(rw http.ResponseWriter, req *http.Request, vars map[string]string) {
