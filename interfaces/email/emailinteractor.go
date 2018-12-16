@@ -2,7 +2,8 @@ package email
 
 import (
 	"errors"
-	"github.com/lovohh/lovohhwebapi/interfaces"
+  "fmt"
+  "github.com/lovohh/lovohhwebapi/interfaces"
 	"github.com/lovohh/lovohhwebapi/usecases"
 )
 
@@ -19,7 +20,8 @@ func (interactor *EmailInteractor) SendEmail(form usecases.EmailForm) error {
 		return verifyErr
 	}
 
-	sendErr := interactor.Gmailer.Send(form.Email, "lovohh@gmail.com", form.Subject, form.Message)
+	subject := fmt.Sprintf("LovoHH Website Notification: From %s", form.Email)
+	sendErr := interactor.Gmailer.Send(form.Email, "lovohh@gmail.com", subject, form.Message)
 
 	if sendErr != nil {
 		interactor.Logger.Log("\t- Failed to send email: " + sendErr.Error())
@@ -31,17 +33,9 @@ func (interactor *EmailInteractor) SendEmail(form usecases.EmailForm) error {
 }
 
 func (interactor *EmailInteractor) verifyEmailForm(ef usecases.EmailForm) error {
-	errExists := false
-	for _, el := range []string{ef.Name, ef.Email, ef.Subject, ef.Message} {
-		if len(el) == 0 {
-			errExists = true
-			break
-		}
-	}
-
-	if errExists {
-		return errors.New("invalid form")
-	}
+  if len(ef.Message) == 0 {
+    return errors.New("invalid form")
+  }
 
 	return nil
 }
