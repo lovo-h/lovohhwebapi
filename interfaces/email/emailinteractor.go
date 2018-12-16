@@ -2,8 +2,8 @@ package email
 
 import (
 	"errors"
-  "fmt"
-  "github.com/lovohh/lovohhwebapi/interfaces"
+	"fmt"
+	"github.com/lovohh/lovohhwebapi/interfaces"
 	"github.com/lovohh/lovohhwebapi/usecases"
 )
 
@@ -33,9 +33,9 @@ func (interactor *EmailInteractor) SendEmail(form usecases.EmailForm) error {
 }
 
 func (interactor *EmailInteractor) verifyEmailForm(ef usecases.EmailForm) error {
-  if len(ef.Message) == 0 {
-    return errors.New("invalid form")
-  }
+	if len(ef.Message) == 0 {
+		return errors.New("invalid form")
+	}
 
 	return nil
 }

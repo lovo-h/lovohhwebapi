@@ -51,10 +51,10 @@ func TestWebLoggerMiddleware_ServeHTTP(t *testing.T) {
 }
 
 func TestGetAndInitWebLoggerMiddleware(t *testing.T) {
-  logger, _ := logger_weblogger()
-  weblogger := GetAndInitWebLoggerMiddleware(logger)
-  weblogger.Logger.Log("")
+	logger, _ := logger_weblogger()
+	weblogger := GetAndInitWebLoggerMiddleware(logger)
+	weblogger.Logger.Log("")
 
-  assert.NotNil(t, weblogger)
-  assert.True(t, logger.IsCalled)
+	assert.NotNil(t, weblogger)
+	assert.True(t, logger.IsCalled)
 }
